@@ -1,0 +1,98 @@
+function traj = seek_spiral_traj(twix_obj)
+
+%% Function to create spiral trajectories given a twix object.
+%This will look in the parent path of the package for the proper trajectory
+%file. If it doesn't find the right measured trajectory file, it will
+%calculate theoretical trajectories (which will probably be bad)
+
+%Trajectories for a given protocol should be stored in parent_path/Traj -
+%It will work best if each trajectory file name is sensibly named as 
+%(name of protocol the traj are for)_traj, or something similar.
+%Get Parent path
+parent_path = which('Tools.seek_spiral_traj');
+idcs = strfind(parent_path,filesep);%determine location of file separators
+parent_path = parent_path(1:idcs(end-1)-1);%remove file
+
+%% Identify protocol name:
+prot_name = twix_obj.hdr.Config.ProtocolName;
+
+%% Compare protocol name to trajectory names - easiest and best way to find trajectory
+all_traj = dir(fullfile(parent_path,'Traj'));
+
+%First test, compare names of trajectory files to protocol names:
+proper_traj = nan;
+for i = 1:length(all_traj)
+    if contains(all_traj(i).name,prot_name)
+        proper_traj = i;
+        break;
+    end
+end
+
+%% Compare parameters in twix header - probably not great:
+if isnan(proper_traj)
+    for i = 1:length(all_traj)
+        traj_twix = mapVBVD(fullfile(parent_path,'Traj',all_traj(i).name));
+        if Tools.compare_twix(twix_obj,traj_twix)
+            proper_traj = i;
+            break;
+        end
+    end
+end
+
+%% Read in Trajecories
+%If we managed to find the proper trajectories, the variable proper_traj is
+%no longer nan, so we can read in trajectories. Otherwise, we'll have to
+%calculate theoretical
+if ~isnan(proper_traj)
+    traj_twix = mapVBVD(fullfile(parent_path,'Traj',all_traj(proper_traj).name));
+    Seq = traj_twix.hdr.Config.SequenceFileName;
+    Ord_Loc = 5;
+    Alpha_Loc = 3;
+    Hubs_Loc = 2;
+    if contains(Seq,'DIFF')
+        Ord_Loc = 4;
+    end
+    Ordering = traj_twix.hdr.MeasYaps.sWipMemBlock.alFree(Ord_Loc);
+    Dim = traj_twix.hdr.Dicom.tMRAcquisitionType;
+    if contains(Dim,'3D')
+        Dim = 1;
+    else
+        Dim = 0;
+    end
+    Alpha = traj_twix.hdr.MeasYaps.sWipMemBlock.adFree{Alpha_Loc};
+    Hubs = traj_twix.hdr.MeasYaps.sWipMemBlock.alFree{Hubs_Loc};
+    NPro = twix_obj.image.NLin;
+    if mod(length(twix_obj.image.Lin),twix_obj.image.NLin) ~= 0
+        NPro = length(twix_obj.image.Lin);
+    end
+    traj_file = fullfile(parent_path,'Traj',all_traj(proper_traj).name);
+    coords = spiral_coords_from_dat(traj_file,Ordering,Dim,Alpha,Hubs,NPro);
+else
+    dwell = twix_obj.hdr.MeasYaps.sRXSPEC.alDwellTime{1,1}/1000;
+    FOV = twix_obj.hdr.Config.ReadFOV;
+    Dim = twix_obj.hdr.Dicom.tMRAcquisitionType;
+    if contains(Dim,'3D')
+        Dim = 1;
+        SType = 3;
+    else
+        Dim = 0;
+        SType = 0;
+    end
+    NSpi = twix_obj.hdr.MeasYaps.sWipMemBlock.adFree{1};
+    US0_Loc = 9;
+    US1_Loc = 10;
+    USR_Loc = 11;
+    US0 = twix_obj.hdr.MeasYaps.sWipMemBlock.adFree{US0_Loc};
+    US1 = twix_obj.hdr.MeasYaps.sWipMemBlock.adFree{US1_Loc};
+    USR = twix_obj.hdr.MeasYaps.sWipMemBlock.adFree{USR_Loc};
+    USamp = [US0 US1 USR];
+    Ordering = 
+
+
+
+
+
+
+
+
+
