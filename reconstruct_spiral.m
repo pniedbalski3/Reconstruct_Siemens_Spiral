@@ -17,8 +17,10 @@ parent_path = parent_path(1:idcs(end)-1);%remove file
 disp('Reading twix file')
 twix_obj = Import.mapVBVD(file,'ignoreSeg');
 %For now, throw out coil sensitivity information... may want to fix in the
-%futre
-twix_obj = twix_obj(end);
+%future
+if length(twix_obj) > 1
+    twix_obj = twix_obj{end};
+end
 %When I coded this sequence, I made it possible to have more lines of
 %acquisition than is planned for in the underlying data architecture. The
 %data is still stored, just a little harder to get to - check for that
