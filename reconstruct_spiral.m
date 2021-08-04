@@ -94,7 +94,7 @@ else
     for i = 1:size(raw,3)
         for j = 1:size(raw,4)
             fid_recon = reshape(raw(:,:,i,j),1,[])';
-            [Image(:,:,i,j),~] = Recon.reconObj.reconstruct(fid_recon, traj);
+            [Image(:,:,i,j),~] = DCF.reconstruct(fid_recon, traj);
         end
     end
     Image = Tools.soscoilcombine(Image);
