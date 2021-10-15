@@ -15,7 +15,8 @@ parent_path = parent_path(1:idcs(end-1)-1);%remove file
 
 %% Identify protocol name:
 prot_name = twix_obj.hdr.Config.ProtocolName;
-
+%Replace spaces with underscores:
+prot_name = strrep(prot_name,' ','_');
 %% Compare protocol name to trajectory names - easiest and best way to find trajectory
 all_traj = dir(fullfile(parent_path,'Traj'));
 
@@ -41,6 +42,9 @@ if ~isempty(all_traj)
     if isnan(proper_traj)
         for i = 1:length(all_traj)
             traj_twix = mapVBVD(fullfile(parent_path,'Traj',all_traj(i).name));
+            if length(traj_twix)>1
+                traj_twix = traj_twix{2};
+            end
             if Tools.compare_twix(twix_obj,traj_twix)
                 proper_traj = i;
                 break;
@@ -54,10 +58,13 @@ end
 %calculate theoretical
 if ~isnan(proper_traj)
     traj_twix = mapVBVD(fullfile(parent_path,'Traj',all_traj(proper_traj).name));
+    if length(traj_twix)>1
+        traj_twix = traj_twix{2};
+    end
     traj = Tools.spiral_coords_from_dat(traj_twix,twix_obj);
 else
-    %Hardcode to no delay, although some may be needed
-    Delay = [0 0 0];
+    %Hardcode to no delay, although some may be needed - Let's try 
+    Delay = [3 3 3];
     disp('No Trajectory File Found. Using Theoretical');
     traj = Tools.siemensspiralcoords(twix_obj,Delay);
 end

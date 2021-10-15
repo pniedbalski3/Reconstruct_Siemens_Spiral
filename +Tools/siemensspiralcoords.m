@@ -66,7 +66,16 @@ Alpha_Loc = 3;
 Hubs_Loc = 2;
 Alpha = twix_obj.hdr.MeasYaps.sWipMemBlock.adFree{Alpha_Loc};
 Hubs = twix_obj.hdr.MeasYaps.sWipMemBlock.alFree{Hubs_Loc};
-Nucleus = twix_obj.hdr.Spice.ResonantNucleus;
+%edit for XA20A
+try
+    Nucleus = twix_obj.hdr.Spice.ResonantNucleus;
+catch
+    if ~strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest')
+        Nucleus = '1H';
+    else
+        Nucleus = '129Xe';
+    end
+end
 Res = FOV/ImSize;
 
 

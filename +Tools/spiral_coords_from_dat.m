@@ -1,4 +1,4 @@
-function traj = spiral_coords_from_dat(traj_twix,im_twix)
+function [traj,Shape] = spiral_coords_from_dat(traj_twix,im_twix)
 % if nargin < 1
 %     file = uigetfile();
 % end
@@ -131,6 +131,9 @@ Gx = (fin_grad(:,1)+fin_grad(:,4)+fin_grad(:,7))/3;
 Gy = (fin_grad(:,2)+fin_grad(:,5)+fin_grad(:,8))/3;
 Gz = (fin_grad(:,3)+fin_grad(:,6)+fin_grad(:,9))/3;
 
+
+Shape = [Gx,Gy,Gz];
+
 %time = 0:Dwell:((length(Gx)-1)*Dwell);
 %time = time/1e6;
 %PJN - make this correct in the units we need
@@ -140,6 +143,8 @@ Gz = (fin_grad(:,3)+fin_grad(:,6)+fin_grad(:,9))/3;
 Gx = cumtrapz(Gx);%/0.04/42.575575*1000;
 Gy = cumtrapz(Gy);%/0.04/42.575575*1000;
 Gz = cumtrapz(Gz);%/0.04/42.575575*1000;
+
+
 
 % figure('Name','Final Trajectories');
 % subplot(1,3,1);

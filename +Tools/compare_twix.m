@@ -55,8 +55,16 @@ if contains(Im_Seq,'DIFF')
     No_OS_Loc = nan;
 end
 
-%Compare Nucleus
-Im_Nuc = image_twix.hdr.Spice.ResonantNucleus;
+%Compare Nucleus - edit for XA20A
+try
+    Im_Nuc = image_twix.hdr.Spice.ResonantNucleus;
+catch
+    if ~strcmp(image_twix.hdr.Dicom.TransmittingCoil,'129Xe_Vest')
+        Im_Nuc = '1H';
+    else
+        Im_Nuc = '129Xe';
+    end
+end
 Traj_Nuc = traj_twix.hdr.MeasYaps.sWipMemBlock.alFree{MeasTraj_Loc};
 if Traj_Nuc == 2
     Traj_Nuc = '129Xe';

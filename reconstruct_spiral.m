@@ -47,10 +47,21 @@ end
 %Order of loops is points, coils, projections, slices, bvalues (I think...)
 %Basically, put coils last - if doing xenon, this should be fine. If doing
 %1H, need to move coils.
-if strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H') && Dim == 1 
-    raw = permute(raw,[1,3,2]);
-elseif strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H') && Dim == 0 
-    raw = permute(raw,[1 3 4 2]);
+%Syntax in try works for KUMC data (VE11C) - ResonantNucleus is no longer a
+%field in XA20A, so need something else. Haven't found nucleus yet, so use
+%coil
+try
+    if strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H') && Dim == 1 
+        raw = permute(raw,[1,3,2]);
+    elseif strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H') && Dim == 0 
+        raw = permute(raw,[1 3 4 2]);
+    end
+catch
+    if ~strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest') && Dim == 1 
+        raw = permute(raw,[1,3,2]);
+    elseif ~strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest') && Dim == 0 
+        raw = permute(raw,[1 3 4 2]);
+    end
 end
 %% Figure out Trajectories:
 traj = Tools.seek_spiral_traj(twix_obj);
@@ -78,14 +89,27 @@ if Dim == 1
     for i = 1:size(raw,3)
         Image(:,:,:,i) = Recon.pipe_recon(ImSize,raw(:,:,i),traj,DCF,i,size(raw,3));
         %If this is xenon, each image matters, so write out as we go:
-        if ~strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H')
-            niftiwrite(squeeze(abs(Image(:,:,:,i))),fullfile(write_path,['Reconstructed_Image_for_Index_' num2str(i)]),'Compressed',true);
+        try
+            if ~strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H')
+                niftiwrite(squeeze(abs(Image(:,:,:,i))),fullfile(write_path,['Reconstructed_Image_for_Index_' num2str(i)]),'Compressed',true);
+            end
+        catch
+            if strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest')
+                niftiwrite(squeeze(abs(Image(:,:,:,i))),fullfile(write_path,['Reconstructed_Image_for_Index_' num2str(i)]),'Compressed',true);
+            end
         end
     end
     %If 1H, coil combine at the end and write out:
-    if strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H')
-        Image = Tools.soscoilcombine(Image);
-        niftiwrite(Image,fullfile(write_path,'Reconstructed_Image'),'Compressed',true);
+    try
+        if strcmp(twix_obj.hdr.Spice.ResonantNucleus,'1H')
+            Image = Tools.soscoilcombine(Image);
+            niftiwrite(Image,fullfile(write_path,'Reconstructed_Image'),'Compressed',true);
+        end
+    catch
+        if strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest')
+            Image = Tools.soscoilcombine(Image);
+            niftiwrite(Image,fullfile(write_path,'Reconstructed_Image'),'Compressed',true);
+        end
     end
 else
     %otherwise, loop through coils and slices, doing Robertson
