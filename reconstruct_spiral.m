@@ -57,7 +57,7 @@ try
         raw = permute(raw,[1 3 4 2]);
     end
 catch
-    if ~strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest') && Dim == 1 
+    if ~strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest') && Dim == 1 && ndims(raw) > 2
         raw = permute(raw,[1,3,2]);
     elseif ~strcmp(twix_obj.hdr.Dicom.TransmittingCoil,'129Xe_Vest') && Dim == 0 
         raw = permute(raw,[1 3 4 2]);

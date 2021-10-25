@@ -64,7 +64,8 @@ if ~isnan(proper_traj)
     traj = Tools.spiral_coords_from_dat(traj_twix,twix_obj);
 else
     %Hardcode to no delay, although some may be needed - Let's try 
-    Delay = [3 3 3];
+    %Delay = [3 3 3];
+    Delay = [12 12 12];
     disp('No Trajectory File Found. Using Theoretical');
     traj = Tools.siemensspiralcoords(twix_obj,Delay);
 end
