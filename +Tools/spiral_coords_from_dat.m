@@ -28,6 +28,12 @@ end
 
 %% Pull data from twix_object
 Dat = squeeze(double(traj_twix.image()));
+%I'm not sure why, but it appears that there are two repetitions? Let's see
+%what happens if we just kill that last dimension in Mizzou Data
+if ndims(Dat)>3
+    Dat = squeeze(Dat(:,:,:,1));
+end
+
 raw = permute(Dat,[1,3,2]);
 
 coil1 = squeeze(raw(:,:,1));
