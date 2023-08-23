@@ -5,12 +5,14 @@ function DCF = get_DCF_Robertson(traj,ImSize,nIter)
 %Compensation Function, but rather the recon object used by this
 %reconstruction. traj need to be a column vector
 
-verbose = true();
+verbose = false;%true();
 
 %Some decent values for reconstruction:
-overgrid_factor = 3;
+overgrid_factor = 2;
 kernel.sharpness = .3;
-kernel.extent = 6*kernel.sharpness;
+kernel.extent = 9*kernel.sharpness;
+cropOvergriddedImage = true;
+deapodizeImage = false;
 
 %Set up kernel
 kernelObj = Recon.SysModel.Kernel.Gaussian(kernel.sharpness, kernel.extent, verbose);

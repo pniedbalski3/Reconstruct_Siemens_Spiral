@@ -55,7 +55,7 @@ for coil = 1:chan
         n = cur_it;
     end
     disp(['Gridding channel ', num2str(n), ' of ', num2str(tot_coils), '...']);
-    gdata(:,:,:,:,coil) = recon.Grid.grid3_MAT(squeeze(data_comb(:,:,:,coil)),traj,DCF,effMtx*alpha,numThread);
+    gdata(:,:,:,:,coil) = Recon.Grid.grid3_MAT(squeeze(data_comb(:,:,:,coil)),traj,DCF,effMtx*alpha,numThread);
 end
 %Free memory now that done with data_comb and traj
 clear data_comb;
@@ -77,7 +77,7 @@ disp('Calculating rolloff kernel...');
 delta = [1.0, 0.0];
 k_not = [0.0, 0.0, 0.0];
 DCF_not = 1.0;
-rokern = recon.Grid.grid3_MAT(delta',k_not',DCF_not,effMtx*alpha,numThread);
+rokern = Recon.Grid.grid3_MAT(delta',k_not',DCF_not,effMtx*alpha,numThread);
 
 %% FFT to rolloff image
 disp('FFTing rolloff kernel to image space...');

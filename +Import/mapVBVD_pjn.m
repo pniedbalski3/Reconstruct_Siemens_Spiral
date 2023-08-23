@@ -369,23 +369,23 @@ for s=1:NScans
     % read header and calculate regridding (optional)
     rstraj = [];
     if arg.bReadHeader
-        [twix_obj{s}.hdr,rstraj] = read_twix_hdr(fid);
+        [twix_obj{s}.hdr,rstraj] = Import.read_twix_hdr(fid);
     end
 
     % declare data objects:
-    twix_obj{s}.image         = twix_map_obj_pjn(arg,'image',filename,version,rstraj);
-    twix_obj{s}.noise         = twix_map_obj_pjn(arg,'noise',filename,version);
-    twix_obj{s}.phasecor      = twix_map_obj_pjn(arg,'phasecor',filename,version,rstraj);
-    twix_obj{s}.phasestab     = twix_map_obj_pjn(arg,'phasestab',filename,version,rstraj);
-    twix_obj{s}.phasestabRef0 = twix_map_obj_pjn(arg,'phasestab_ref0',filename,version,rstraj);
-    twix_obj{s}.phasestabRef1 = twix_map_obj_pjn(arg,'phasestab_ref1',filename,version,rstraj);
-    twix_obj{s}.refscan       = twix_map_obj_pjn(arg,'refscan',filename,version,rstraj);
-    twix_obj{s}.refscanPC     = twix_map_obj_pjn(arg,'refscan_phasecor',filename,version,rstraj);
-    twix_obj{s}.refscanPS     = twix_map_obj_pjn(arg,'refscan_phasestab',filename,version,rstraj);
-    twix_obj{s}.refscanPSRef0 = twix_map_obj_pjn(arg,'refscan_phasestab_ref0',filename,version,rstraj);
-    twix_obj{s}.refscanPSRef1 = twix_map_obj_pjn(arg,'refscan_phasestab_ref1',filename,version,rstraj);
-    twix_obj{s}.RTfeedback    = twix_map_obj_pjn(arg,'rtfeedback',filename,version,rstraj);
-    twix_obj{s}.vop           = twix_map_obj_pjn(arg,'vop',filename,version); % tx-array rf pulses
+    twix_obj{s}.image         = Import.twix_map_obj_pjn(arg,'image',filename,version,rstraj);
+    twix_obj{s}.noise         = Import.twix_map_obj_pjn(arg,'noise',filename,version);
+    twix_obj{s}.phasecor      = Import.twix_map_obj_pjn(arg,'phasecor',filename,version,rstraj);
+    twix_obj{s}.phasestab     = Import.twix_map_obj_pjn(arg,'phasestab',filename,version,rstraj);
+    twix_obj{s}.phasestabRef0 = Import.twix_map_obj_pjn(arg,'phasestab_ref0',filename,version,rstraj);
+    twix_obj{s}.phasestabRef1 = Import.twix_map_obj_pjn(arg,'phasestab_ref1',filename,version,rstraj);
+    twix_obj{s}.refscan       = Import.twix_map_obj_pjn(arg,'refscan',filename,version,rstraj);
+    twix_obj{s}.refscanPC     = Import.twix_map_obj_pjn(arg,'refscan_phasecor',filename,version,rstraj);
+    twix_obj{s}.refscanPS     = Import.twix_map_obj_pjn(arg,'refscan_phasestab',filename,version,rstraj);
+    twix_obj{s}.refscanPSRef0 = Import.twix_map_obj_pjn(arg,'refscan_phasestab_ref0',filename,version,rstraj);
+    twix_obj{s}.refscanPSRef1 = Import.twix_map_obj_pjn(arg,'refscan_phasestab_ref1',filename,version,rstraj);
+    twix_obj{s}.RTfeedback    = Import.twix_map_obj_pjn(arg,'rtfeedback',filename,version,rstraj);
+    twix_obj{s}.vop           = Import.twix_map_obj_pjn(arg,'vop',filename,version); % tx-array rf pulses
 
     % jump to first mdh
     cPos = cPos + hdr_len;

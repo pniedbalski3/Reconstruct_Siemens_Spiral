@@ -89,7 +89,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     int width       = (int) *mxGetPr(prhs[3]); /* grid size */
 
     /* DATA */
-    printf("copy data\n");
+    //printf("copy data\n");
         assert(prhs[0] != NULL);     /* check existence */
         assert(mxIsDouble(prhs[0])); /* check for type double */
     int nd = mxGetNumberOfDimensions(prhs[0]); /* get coordinate dimensions */
@@ -105,7 +105,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
  
     /* COORDS */
-    printf("copy coords\n");
+    //printf("copy coords\n");
         assert(prhs[1] != NULL);     /* check existence */
         assert(mxIsDouble(prhs[1])); /* check for type double */
     nd = mxGetNumberOfDimensions(prhs[1]); /* get coordinate dimensions */
@@ -121,7 +121,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
  
 
     /* WEIGHTS */
-    printf("copy weights\n");
+    //printf("copy weights\n");
         assert(prhs[2] != NULL);     /* check existence */
         assert(mxIsDouble(prhs[2])); /* check for type double */
     nd = mxGetNumberOfDimensions(prhs[2]); /* get sample weights */
@@ -139,7 +139,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     assert( weights->num_elem == coords->num_elem/3 );
 
     /* allocate output array */
-    printf("allocate grid\n");
+    //printf("allocate grid\n");
     unsigned long dims_g[4];
     dims_g[0] = 2; /* complex */
     dims_g[1] = width; /* effMtx */
@@ -148,7 +148,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     dataArray_double *gdata = new_dataArray_double(4,dims_g);
 
     /* allocate kernel table */
-    printf("allocate kernel\n");
+    //printf("allocate kernel\n");
     unsigned long dim_k[1];
     dim_k[0] = DEFAULT_KERNEL_TABLE_SIZE;
     dataArray_double *kern = (dataArray_double*) new_dataArray_double(1,dim_k);
@@ -160,7 +160,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     double win_d = DEFAULT_WINDOW_LENGTH;
 
 	/* GRID3 non-threaded */
-	printf("grid3 -non-threaded\n");
+	//printf("grid3 -non-threaded\n");
 
 	/* stub out threading vars */
 	int nt = 1; 
@@ -180,7 +180,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 			&win_d );
 
     /* Create an mxArray for the return argument */ 
-    printf("copy output grid\n");
+    //printf("copy output grid\n");
     int *odims = (int*) malloc( sizeof(int)*(4) );
     for(i=0;i<4;i++)
         odims[i] = dims_g[i];
@@ -190,7 +190,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     memcpy( mxGetPr(plhs[0]), gdata->data, (gdata->num_elem) * sizeof(double));
     free(odims);
 
-    printf("free local memory\n");
+    //printf("free local memory\n");
     /* free temp data */
     free_dataArray_double(coords);
     free_dataArray_double(data);
